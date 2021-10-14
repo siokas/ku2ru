@@ -2,15 +2,15 @@ import Head from "next/head";
 import Footer from "./components/Footer";
 import { getAllPosts } from "./../utils/getPosts";
 import Navigation from "./components/Navigation";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
+// import { useRouter } from "next/router";
 
 const limit = 0;
 
-function Posts({ posts, page = 1 }) {
+function Posts({ posts }) {
   const [searchText, setSearchText] = useState("");
-  const [currentPage, updateCurrentPage] = useState(page);
-  const router = useRouter();
+  // const [currentPage, updateCurrentPage] = useState(page);
+  // const router = useRouter();
 
   const Pagginator = () => (
     <div className="flex my-12">

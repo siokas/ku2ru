@@ -2,8 +2,12 @@ import React from "react";
 import Footer from "./../components/Footer";
 import Theme from "./../components/Theme";
 import Head from "next/head";
-import { createClient } from "contentful";
+import Link from "next/link";
+import { createClient, Entry } from "contentful";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { useRouter } from "next/router";
+
+type PostItem = { slug: string };
 
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
@@ -12,6 +16,11 @@ const client = createClient({
 
 export default function Post({ post }) {
   const { title, body, from, generationDate } = post.fields;
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-full min-h-screen">
@@ -31,12 +40,11 @@ export default function Post({ post }) {
           <div className="font-sans">
             <p className="text-base md:text-sm text-green-600 font-bold">
               &lt;{" "}
-              <a
-                href="/"
-                className="text-base md:text-sm text-green-600 font-bold no-underline hover:underline"
-              >
-                BACK TO BLOG
-              </a>
+              <Link href="/">
+                <a className="text-base md:text-sm text-green-600 font-bold no-underline hover:underline">
+                  BACK TO BLOG
+                </a>
+              </Link>
             </p>
             <h1 className="font-bold font-sans break-normal pt-6 pb-2 text-3xl md:text-4xl">
               {title}
@@ -76,13 +84,13 @@ export default function Post({ post }) {
 export async function getStaticPaths() {
   const res = await client.getEntries({ content_type: "post" });
 
-  const paths = res.items.map((item) => {
+  const paths = res.items.map((item: Entry<PostItem>) => {
     return {
       params: { slug: item.fields.slug },
     };
   });
 
-  return { paths, fallback: true };
+  return { paths, fallback: false };
 }
 
 export async function getStaticProps({ params }) {

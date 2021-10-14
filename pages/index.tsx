@@ -2,6 +2,7 @@ import Head from "next/head";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import { getPosts } from "./../utils/getPosts";
+import Link from "next/link";
 
 export default function Home({ posts }) {
   return (
@@ -92,9 +93,9 @@ export default function Home({ posts }) {
           </table>
         </div>
         <div className="mt-8">
-          <a className="text-2xl font-bold" href="/posts">
-            All Posts
-          </a>
+          <Link href="/posts">
+            <a className="text-2xl font-bold">All Posts</a>
+          </Link>
         </div>
       </main>
 
@@ -103,7 +104,7 @@ export default function Home({ posts }) {
   );
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
   const posts = await getPosts({ limit: 3 });
 
   return {
